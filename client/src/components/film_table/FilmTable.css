@@ -1,0 +1,30 @@
+td {
+    vertical-align: middle;
+    width: 20%;
+} 
+
+th {
+    width: 20%;
+}
+
+.table {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.rating {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.redTitle {
+    color: red;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+button:focus {
+    box-shadow:none !important;
+}

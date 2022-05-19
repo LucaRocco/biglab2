@@ -1,0 +1,25 @@
+.button-container {
+    display: flex;
+}
+
+.error-container {
+    display: flex;
+}
+
+.right {
+    margin-left: auto;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.center-flex {
+    display: flex;
+    align-items: center;
+}
+
+.form-container {
+    margin-top: 30px;
+    width: 80%;
+}
