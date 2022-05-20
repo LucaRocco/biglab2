@@ -3,10 +3,10 @@
 ## Team name: TEAM_NAME
 
 Team members:
-* s123456 LASTNAME FIRSTNAME
-* s123456 LASTNAME FIRSTNAME 
-* s123456 LASTNAME FIRSTNAME
-* s123456 LASTNAME FIRSTNAME (delete line if not needed)
+* s256962 Greco Lorenzo
+* s295243 Cadeddu Manuel
+* s303109 Crisci Luigi
+* s303408 Rocco Luca Giuseppe
 
 ## Instructions
 

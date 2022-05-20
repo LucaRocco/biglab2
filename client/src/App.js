@@ -4,18 +4,9 @@ import './App.css';
 import MainPage from './pages/main_page/MainPage';
 import FilmTable from './components/film_table/FilmTable';
 import { useState } from 'react';
-import dayjs from 'dayjs';
 import FilmForm from './components/forms/FilmForm';
 import EmptyState from './images/NotFound.png';
 import { Button } from 'react-bootstrap';
-
-let localFilms = [
-  { id: 1, title: "Pulp Fiction", favorite: true, watchedDate: dayjs("2022-01-1"), rating: 5 },
-  { id: 2, title: "21 Grams", favorite: false, watchedDate: undefined, rating: 4 },
-  { id: 3, title: "Star Wars", favorite: false, watchedDate: undefined, rating: undefined },
-  { id: 4, title: "Matrix", favorite: true, watchedDate: dayjs("2022-04-17"), rating: 0 },
-  { id: 5, title: "Shrek", favorite: false, watchedDate: dayjs("2022-03-22"), rating: 0 }
-];
 
 function NotFoundPage() {
   const navigate = useNavigate();
@@ -28,7 +19,7 @@ function NotFoundPage() {
 }
 
 function App() {
-  const [films, setFilms] = useState(localFilms);
+  const [films, setFilms] = useState([]);
   const [query, setQuery] = useState('');
 
   function deleteFilm(filmId) {
@@ -47,7 +38,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<MainPage searchFilm={query => { setQuery(query) }}></MainPage>}>
-          <Route index element={<FilmTable films={films} onDelete={deleteFilm} updateFilmFn={updateFilm} query={query}></FilmTable>} />
+          <Route index element={<FilmTable films={films} onDelete={deleteFilm} updateFilmFn={updateFilm} query={query} setFilms={setFilms}></FilmTable>} />
         </Route>
         <Route path='/add' element={<FilmForm onSave={addFilm} films={films} />} />
         <Route path='/edit/:filmId' element={<FilmForm onSave={updateFilm} films={films} />} />

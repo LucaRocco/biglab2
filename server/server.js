@@ -3,11 +3,15 @@ const { json } = require('express/lib/response');
 const { param, body, validationResult } = require('express-validator');
 const dayjs = require('dayjs');
 const dao = require('./dao');
+const cors = require('cors');
+const morgan = require('morgan');
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.use(express.json());
+app.use(morgan('dev'));
+app.use(cors());
 
 app.get('/api/films', (req, res) => {
     dao.getAllOrFiltered(req.query.filter)
