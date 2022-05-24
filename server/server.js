@@ -44,6 +44,7 @@ app.post('/api/films', [
     body('rating').optional().isInt({ min: 0, max: 5 }).withMessage('Must be between 0 and 5'),
     body('favorite').isBoolean() 
 ], (req, res) => {
+    console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });

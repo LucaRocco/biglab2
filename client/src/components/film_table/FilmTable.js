@@ -7,19 +7,37 @@ import dayjs from 'dayjs';
 import { Rating } from 'react-simple-star-rating';
 import { BsPencilSquare, BsTrash } from 'react-icons/bs';
 import { useEffect } from 'react';
+import API from '../../API';
 
-function FilmTable({ films, onDelete, updateFilmFn, setFilms }) {
+function FilmTable({ films, onDelete, updateFilmFn, setFilms, dirty, setDirty }) {
   const navigate = useNavigate();
   const [searchParam] = useSearchParams();
   const filterFromSearchParams = searchParam.get('filter');
   const currentFilter = filterNamesArray.includes(filterFromSearchParams) ? filterFromSearchParams : 'all';
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/films?filter=${currentFilter}`)
-      .then(res => res.json())
-      .then(films => setFilms(films.map(film => ({ ...film, watchedDate: (film.watchedDate ? dayjs(film.watchedDate) : undefined) }))))
-      .catch(err => console.log(err));
-  }, [setFilms, currentFilter]);
+    if (currentFilter) {
+      console.log("filter");
+      API.getFilms(currentFilter)
+          .then(films => {
+            setFilms(films);
+          })
+          .catch(err => console.log(err));
+    }
+  }, [currentFilter, setFilms]);
+
+
+  useEffect(() => {
+    if (dirty) {
+      console.log("dirty");
+      API.getFilms(currentFilter)
+          .then(films => {
+            setFilms(films);
+            setDirty(false);
+          })
+          .catch(err => console.log(err));
+    }
+  }, [currentFilter, dirty, setDirty, setFilms]);
 
   function handleRatingChange(film, rating) {
     const oldRating = film.rating;
@@ -42,7 +60,7 @@ function FilmTable({ films, onDelete, updateFilmFn, setFilms }) {
               <tr key={film.id}>
                 <td className={film.favorite ? 'redTitle' : ''}>{film.title}</td>
                 <td><input type='checkbox' onChange={(event) => { updateFilmFn({ ...film, favorite: event.target.checked }) }} checked={film.favorite}></input></td>
-                <td>{film.watchedDate ? film.watchedDate.format("YYYY-MM-DD") : <b>Not Watched</b>}</td>
+                <td>{film.watchedDate ? dayjs(film.watchedDate).format("YYYY-MM-DD") : <b>Not Watched</b>}</td>
                 <td>
                   {
                     <Rating size='22' onClick={(value) => updateFilmFn(handleRatingChange(film, value / 20))} ratingValue={film.rating * 20}></Rating>
