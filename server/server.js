@@ -79,7 +79,7 @@ app.put('/api/films/:filmId', [
     dao.updateFilm(req.params.filmId, req.body).then(() => {
         res.sendStatus(200);
     }).catch(err => {
-        res.status(500).json({ error: 'DB Error', details: err });
+        res.status(500).json({ error: `DB Error on film ${req.params.filmId}`, details: err });
     });
 });
 

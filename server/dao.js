@@ -47,7 +47,7 @@ exports.addFilm = (film) => new Promise((resolve, reject) => {
 });
 
 exports.updateFilm = (filmId, film) => new Promise((resolve, reject) => {
-    db.run(`UPDATE films SET title=?, favorite=?, watchedDate=?, rating=?, user=? where id=?`,
+    db.run(`UPDATE films SET title=?, favorite=?, watchedDate=?, rating=? where user=? AND id=?`,
         [film.title, film.favorite, film.watchedDate, film.rating, film.user, filmId], (err) => {
             if (err) reject(err);
             else resolve();
