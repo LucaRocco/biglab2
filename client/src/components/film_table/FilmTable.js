@@ -15,21 +15,10 @@ function FilmTable({ films, onDelete, updateFilmFn, setFilms, dirty, setDirty })
   const filterFromSearchParams = searchParam.get('filter');
   const currentFilter = filterNamesArray.includes(filterFromSearchParams) ? filterFromSearchParams : 'all';
 
-  useEffect(() => {
-    if (currentFilter) {
-      console.log("filter");
-      API.getFilms(currentFilter)
-          .then(films => {
-            setFilms(films);
-          })
-          .catch(err => console.log(err));
-    }
-  }, [currentFilter, setFilms]);
 
 
   useEffect(() => {
-    if (dirty) {
-      console.log("dirty");
+    if (dirty || currentFilter) {
       API.getFilms(currentFilter)
           .then(films => {
             setFilms(films);

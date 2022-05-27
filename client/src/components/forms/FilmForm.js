@@ -1,14 +1,13 @@
 import './FilmForm.css';
 import Button from 'react-bootstrap/Button';
-import { Alert, Col, Container, Row } from 'react-bootstrap';
+import { Alert, Col, Container, Row, Spinner } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { Rating } from 'react-simple-star-rating';
-import API from '../../API';
 
-function FilmForm({ onSave, films }) {
+function FilmForm({ onSave, films, wait }) {
 
   const { filmId } = useParams();
   const film = films.find(f => f.id.toString() === filmId);
@@ -44,8 +43,9 @@ function FilmForm({ onSave, films }) {
       return;
     }
 
-    onSave({ id: film ? film.id : undefined, title, favorite, watchedDate: watchedDate ? dayjs(watchedDate) : undefined, rating: (rating / 20) });
+    onSave({ id: film ? film.id : undefined, title, favorite, watchedDate: watchedDate ? dayjs(watchedDate) : undefined, rating: (rating / 20), user: 1 });
     navigate('/');
+
   }
 
   function onTitleChange(event) {
@@ -104,7 +104,11 @@ function FilmForm({ onSave, films }) {
           </Row>
           <div className='button-container'>
             <Button onClick={() => { navigate('/'); }} variant='secondary'>Cancel</Button>
-            <Button type='submit' onClick={handleAdd} className='right'>{film ? 'Update' : 'Add'}</Button>
+            {
+              wait
+                  ? <Spinner animation="border" variant="primary" className='right'/>
+                  : <Button type='submit' onClick={handleAdd} className='right'>{film ? 'Update' : 'Add'}</Button>
+            }
           </div>
         </Container>
       </Form>

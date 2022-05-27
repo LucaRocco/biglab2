@@ -23,6 +23,7 @@ function App() {
   const [films, setFilms] = useState([]);
   const [query, setQuery] = useState('');
   const [dirty, setDirty] = useState(false);
+  const [wait, setWait] = useState(false);
 
   function deleteFilm(filmId) {
     API.deleteFilm(filmId).then(() => {
@@ -32,16 +33,20 @@ function App() {
   };
 
   function addFilm(film) {
+    setWait(true);
+    setFilms(oldFilms => [ ...oldFilms, { ...film, id: 1 } ]);
     API.addFilm(film).then(() => {
-      setFilms(oldFilms => [ ...oldFilms, { ...film, id: null } ]);
       setDirty(true);
+      setWait(false);
   })
   };
 
   function updateFilm(film) {
+    setWait(true);
+    setFilms(oldFilms => oldFilms.map(newFilm => newFilm.id === film.id ? Object.assign({}, film) : newFilm));
     API.updateFilm(film).then(() => {
-      setFilms(oldFilms => oldFilms.map(newFilm => newFilm.id === film.id ? Object.assign({}, film) : newFilm));
       setDirty(true);
+      setWait(false);
     }).catch();
   };
 
@@ -51,8 +56,8 @@ function App() {
         <Route path='/' element={<MainPage searchFilm={query => { setQuery(query) }}></MainPage>}>
           <Route index element={<FilmTable films={films} onDelete={deleteFilm} updateFilmFn={updateFilm} query={query} setFilms={setFilms} dirty={dirty} setDirty={setDirty}></FilmTable>} />
         </Route>
-        <Route path='/add' element={<FilmForm onSave={addFilm} films={films} />} />
-        <Route path='/edit/:filmId' element={<FilmForm onSave={updateFilm} films={films} />} />
+        <Route path='/add' element={<FilmForm onSave={addFilm} films={films} wait={wait}/>} />
+        <Route path='/edit/:filmId' element={<FilmForm onSave={updateFilm} films={films} wait={wait}/>} />
         <Route path='*' element={ <NotFoundPage /> } />
       </Routes>
     </Router>)
