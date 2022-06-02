@@ -43,8 +43,8 @@ function FilmForm({ onSave, films, wait }) {
       return;
     }
 
-    onSave({ id: film ? film.id : undefined, title, favorite, watchedDate: watchedDate ? dayjs(watchedDate) : undefined, rating: (rating / 20), user: 1 });
-    navigate('/');
+    onSave({ id: film ? film.id : undefined, title, favorite, watchedDate: watchedDate ? dayjs(watchedDate) : undefined, rating: (rating / 20), user: 1 }).then(() => {navigate('/')});
+
 
   }
 

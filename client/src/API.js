@@ -4,7 +4,9 @@ const APIURL = new URL('http://localhost:3001/api');
 
 function getFilms(currentFilter) {
     return new Promise((resolve, reject) => {
-        fetch(`${APIURL}/films?filter=${currentFilter}`)
+        fetch(`${APIURL}/films?filter=${currentFilter}`, {
+            credentials: 'include'
+        })
             .then(res => {
                 if (res.ok) {
                     res.json()
@@ -21,6 +23,7 @@ function addFilm(film) {
     return new Promise((resolve, reject) => {
         fetch(`${APIURL}/films`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
               },
@@ -41,7 +44,8 @@ function addFilm(film) {
 function deleteFilm(filmId) {
     return new Promise((resolve, reject) => {
         fetch(`${APIURL}/films/${filmId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            credentials: 'include'
         }).then(response => {
             if(response.ok) {
                 resolve(null);
@@ -56,6 +60,7 @@ function updateFilm(film) {
     return new Promise((resolve, reject) => {
         fetch(`${APIURL}/films/${film.id}`, {
             method: 'PUT',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
               },
@@ -70,5 +75,36 @@ function updateFilm(film) {
     });
 }
 
-const API = { getFilms, addFilm, deleteFilm, updateFilm };
+function logIn(credentials) {
+    return fetch(`${APIURL}/sessions`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(credentials)
+    })
+    .then(res => {
+        return res.json();
+    })
+    .catch(err => console.log(err));
+}
+
+async function logOut() {
+    await fetch(`${APIURL}/sessions/current`, { method: 'DELETE', credentials: 'include' });
+  }
+  
+  async function getUserInfo() {
+    const response = await fetch(`${APIURL}/sessions/current`, {credentials: 'include'});
+    const userInfo = await response.json();
+    if (response.ok) {
+      return userInfo;
+    } else {
+      throw userInfo;  // an object with the error coming from the server
+    }
+  }
+
+  
+
+const API = { getFilms, addFilm, deleteFilm, updateFilm, logIn, getUserInfo };
 export default API;

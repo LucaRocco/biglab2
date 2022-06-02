@@ -30,8 +30,11 @@ function FilmTable({ films, onDelete, updateFilmFn, setFilms, dirty, setDirty })
 
   function handleRatingChange(film, rating) {
     const oldRating = film.rating;
-    film.rating = (oldRating === rating ? rating - 1 : rating)
-    return film
+    if (oldRating === film.rating) {
+        film.rating = (oldRating === rating ? rating - 1 : rating)
+        return film
+    }
+    return ({message: 'same'})
   }
 
   return <>
