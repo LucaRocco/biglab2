@@ -2,7 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
 import MainPage from './pages/main_page/MainPage';
-import FilmTable from './components/film_table/FilmTable';
 import { useEffect, useState } from 'react';
 import FilmForm from './components/forms/FilmForm';
 import EmptyState from './images/NotFound.png';
@@ -66,13 +65,9 @@ function App() {
   function doLogin(credentials) {
     API.logIn(credentials)
       .then(user => {
-        console.log(user);
         setUser(user);
         setLoggedIn(true);
       })
-
-    setLoggedIn(true);
-
   }
 
   function updateFilm(film) {
@@ -93,10 +88,8 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={loggedIn
-          ? <MainPage user={user} searchFilm={query => { setQuery(query) }}></MainPage>
-          : <Navigate to='/login' />}>
-          <Route index element={<FilmTable films={films} onDelete={deleteFilm} updateFilmFn={updateFilm} query={query} setFilms={setFilms} dirty={dirty} setDirty={setDirty}></FilmTable>} />
-        </Route>
+          ? <MainPage user={user} searchFilm={query => { setQuery(query) }} films={films} deleteFilm={deleteFilm} updateFilm={updateFilm} query={query} setFilms={setFilms} dirty={dirty} setDirty={setDirty} isLoggedIn={loggedIn}></MainPage>
+          : <Navigate to='/login' />} />
         <Route path='/add' element={<FilmForm onSave={addFilm} films={films} wait={wait} />} />
         <Route path='/edit/:filmId' element={<FilmForm onSave={updateFilm} films={films} wait={wait} />} />
         <Route path='*' element={<NotFoundPage />} />

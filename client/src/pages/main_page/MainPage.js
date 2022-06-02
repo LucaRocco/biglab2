@@ -3,10 +3,10 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Outlet } from 'react-router-dom';
+import FilmTable from '../../components/film_table/FilmTable';
 
 export default function MainPage(props) {
-  const { searchFilm } = props;
+  const { searchFilm, films, deleteFilm, updateFilm, query, setFilms, dirty, setDirty, isLoggedIn } = props;
 
   return (
     <div>
@@ -19,7 +19,7 @@ export default function MainPage(props) {
           <Col md={1}>
           </Col>
           <Col md={8}>
-            <Row> <Outlet /> </Row>
+            <Row> <FilmTable films={films} onDelete={deleteFilm} updateFilmFn={updateFilm} query={query} setFilms={setFilms} dirty={dirty} setDirty={setDirty} isLoggedIn={isLoggedIn}></FilmTable> </Row>
           </Col>
         </Row>
       </Container>

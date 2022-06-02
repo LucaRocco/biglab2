@@ -63,7 +63,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/api/films', isLoggedIn, (req, res) => {
-    filmDao.getAllOrFiltered(req.query.filter)
+    filmDao.getAllOrFiltered(req.query.filter, req.user.id)
         .then(rows => res.json(rows))
         .catch(err => res.status(500).json(err));
 });

@@ -6,13 +6,13 @@ const db = new sqlite.Database('films.db',
 function sqlFilter(filter) {
     switch (filter) {
         case 'best_rated':
-            return 'where rating = 5';
+            return 'and rating = 5';
         case 'favorites':
-            return 'where favorite = 1';
+            return 'and favorite = 1';
         case 'seen_last_month':
-            return `where watchedDate >= '${dayjs().subtract(1, 'month').format('YYYY-MM-DD')}'`;
+            return `and watchedDate >= '${dayjs().subtract(1, 'month').format('YYYY-MM-DD')}'`;
         case 'unseen':
-            return 'where watchedDate is null';
+            return 'and watchedDate is null';
         default:
             return '';
     }
@@ -31,8 +31,8 @@ exports.getOneById = (filmId) => new Promise((resolve, reject) => {
     })
 });
 
-exports.getAllOrFiltered = (filter) => new Promise((resolve, reject) => {
-    db.all(`select * from films ${sqlFilter(filter)}`, (err, rows) => {
+exports.getAllOrFiltered = (filter, userId) => new Promise((resolve, reject) => {
+    db.all(`select * from films where user = ? ${sqlFilter(filter)}`, [userId], (err, rows) => {
         if (err) reject({ message: err.message });
         else resolve(rows);
     })

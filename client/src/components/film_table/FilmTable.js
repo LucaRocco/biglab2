@@ -9,7 +9,7 @@ import { BsPencilSquare, BsTrash } from 'react-icons/bs';
 import { useEffect } from 'react';
 import API from '../../API';
 
-function FilmTable({ films, onDelete, updateFilmFn, setFilms, dirty, setDirty }) {
+function FilmTable({ films, onDelete, updateFilmFn, setFilms, dirty, setDirty, isLoggedIn }) {
   const navigate = useNavigate();
   const [searchParam] = useSearchParams();
   const filterFromSearchParams = searchParam.get('filter');
@@ -18,15 +18,17 @@ function FilmTable({ films, onDelete, updateFilmFn, setFilms, dirty, setDirty })
 
 
   useEffect(() => {
-    if (dirty || currentFilter) {
-      API.getFilms(currentFilter)
-          .then(films => {
-            setFilms(films);
-            setDirty(false);
-          })
-          .catch(err => console.log(err));
+    if (isLoggedIn) {
+      if (dirty || currentFilter) {
+        API.getFilms(currentFilter)
+            .then(films => {
+              setFilms(films);
+              setDirty(false);
+            })
+            .catch(err => console.log(err));
+      }
     }
-  }, [currentFilter, dirty, setDirty, setFilms]);
+  }, [currentFilter, dirty, setDirty, setFilms, isLoggedIn]);
 
   function handleRatingChange(film, rating) {
     const oldRating = film.rating;

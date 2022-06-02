@@ -116,3 +116,17 @@ Request body: _None_
 Response: `204 No Content` (success) or `500 Internal Server Error` (generic error).
 
 Response body: _None_
+
+### __Login__
+
+URL: `/api/sessions`
+
+Method: POST
+
+Description: Login using email and password.
+
+Request body: { email: "email@domain.com", password: "password" }
+
+Response: `200 Success` (success) `401 Unauthorized` (success) or `500 Internal Server Error` (generic error).
+
+Response body: { id: 1, username: "email@domain.com", name: "name" }
