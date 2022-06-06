@@ -38,17 +38,17 @@ exports.getAllOrFiltered = (filter, userId) => new Promise((resolve, reject) => 
     })
 });
 
-exports.addFilm = (film) => new Promise((resolve, reject) => {
+exports.addFilm = (film, userId) => new Promise((resolve, reject) => {
     db.run('insert into films(title, favorite, watchedDate, rating, user) values(?, ?, ?, ?, ?)',
-        [film.title, film.favorite, film.watchedDate, film.rating, film.user], (err) => {
+        [film.title, film.favorite, film.watchedDate, film.rating, userId], (err) => {
             if (err) reject(err);
             else resolve();
         });
 });
 
-exports.updateFilm = (filmId, film) => new Promise((resolve, reject) => {
+exports.updateFilm = (filmId, film, userId) => new Promise((resolve, reject) => {
     db.run(`UPDATE films SET title=?, favorite=?, watchedDate=?, rating=? where user=? AND id=?`,
-        [film.title, film.favorite, film.watchedDate, film.rating, film.user, filmId], (err) => {
+        [film.title, film.favorite, film.watchedDate, film.rating, userId, filmId], (err) => {
             if (err) reject(err);
             else resolve();
         });

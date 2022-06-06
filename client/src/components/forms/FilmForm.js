@@ -14,7 +14,7 @@ function FilmForm({ onSave, films, wait }) {
 
   const [title, setTitle] = useState(film ? film.title : '');
   const [watchedDate, setDate] = useState(film && film.watchedDate ? film.watchedDate.format('YYYY-MM-DD') : '');
-  const [rating, setRating] = useState(film ? film.rating * 20 : 0);
+  const [rating, setRating] = useState(film ? film.rating * 20 : null);
   const [favorite, setFavorite] = useState(film ? film.favorite : false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -43,7 +43,7 @@ function FilmForm({ onSave, films, wait }) {
       return;
     }
 
-    onSave({ id: film ? film.id : undefined, title, favorite, watchedDate: watchedDate ? dayjs(watchedDate) : undefined, rating: (rating / 20), user: 1 }).then(() => {navigate('/')});
+    onSave({ id: film ? film.id : undefined, title, favorite, watchedDate: watchedDate ? dayjs(watchedDate) : undefined, rating: rating ? (rating / 20) : null, user: 1 }).then(() => {navigate('/')});
 
 
   }

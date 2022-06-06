@@ -1,9 +1,17 @@
 import { Form, Row, Container, Col, Alert, Button } from "react-bootstrap";
 import { useState } from "react";
 
+/* Regex email format validation */
+function isEmailValid(mail) {
+    if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+        return (true)
+    }
+    return (false)
+}
+
 
 function Login(props) {
-    const [username, setUsername] = useState('test@polito.it');
+    const [username, setUsername] = useState('john.doe@polito.it');
     const [password, setPassword] = useState('password');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -12,17 +20,20 @@ function Login(props) {
         setErrorMessage('');
         const credentials = { username, password };
 
-        let valid = true;
-        if (username === '' || password === '')
-            valid = false;
+        if (!isEmailValid(username)) {
+            setErrorMessage('Email format not valid');
+            return;
+        }
 
-        if (valid) {
-            props.login(credentials);
+        if(password === '') {
+            setErrorMessage("Password is mandatory");
+            return;
         }
-        else {
-            // show a better error message...
-            setErrorMessage('Error(s) in the form, please fix it.')
-        }
+
+        props.login(credentials)
+            .catch(async err => {
+                setErrorMessage(err.message);
+            })
     }
 
     return (
@@ -40,7 +51,7 @@ function Login(props) {
                             <Form.Label>Password</Form.Label>
                             <Form.Control type='password' value={password} onChange={ev => setPassword(ev.target.value)} />
                         </Form.Group>
-                        <Button onClick={handleSubmit}>Login</Button>
+                        <Button type='submit' onClick={handleSubmit}>Login</Button>
                     </Form>
                 </Col>
             </Row>

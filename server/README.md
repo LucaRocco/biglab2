@@ -129,4 +129,26 @@ Request body: { email: "email@domain.com", password: "password" }
 
 Response: `200 Success` (success) `401 Unauthorized` (success) or `500 Internal Server Error` (generic error).
 
-Response body: { id: 1, username: "email@domain.com", name: "name" }
+Response body: { id: 1, username: "mario.rossi@polito.it", name: "Mario" }
+
+### __Get User Information__
+
+URL: `/api/sessions/current`
+
+Method: GET
+
+Description: Get user information if it's already logged in
+
+Response: `200 Success` (success) `401 Unauthorized` (success) or `500 Internal Server Error` (generic error).
+
+Response body: { id: 1, username: "mario.rossi@polito.it", name: "Mario" }
+
+### __Logout__
+
+URL: `/api/sessions/current`
+
+Method: DELETE
+
+Description: Logout from the system
+
+Response: `200 Success` (success) `401 Unauthorized` (success) or `500 Internal Server Error` (generic error).

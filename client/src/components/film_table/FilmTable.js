@@ -1,6 +1,7 @@
 import './FilmTable.css';
 import Table from 'react-bootstrap/Table'
 import PlusIcon from '../../images/plus.svg';
+import { RiLogoutCircleRLine } from 'react-icons/ri'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { filterNamesArray, underscoreToUpperCase } from '../../helper/NameHelper';
 import dayjs from 'dayjs';
@@ -9,7 +10,7 @@ import { BsPencilSquare, BsTrash } from 'react-icons/bs';
 import { useEffect } from 'react';
 import API from '../../API';
 
-function FilmTable({ films, onDelete, updateFilmFn, setFilms, dirty, setDirty, isLoggedIn }) {
+function FilmTable({ user, films, onDelete, updateFilmFn, setFilms, dirty, setDirty, isLoggedIn, logout }) {
   const navigate = useNavigate();
   const [searchParam] = useSearchParams();
   const filterFromSearchParams = searchParam.get('filter');
@@ -40,7 +41,8 @@ function FilmTable({ films, onDelete, updateFilmFn, setFilms, dirty, setDirty, i
   }
 
   return <>
-    <h1 className='mt-3 p-0'>Filter: {underscoreToUpperCase(currentFilter)}</h1>
+    <h1 className='mt-3 p-0'>Welcome {user.name}</h1>
+    <h2 className='mt-3 p-0'>Filter: {underscoreToUpperCase(currentFilter)}</h2>
     <Table>
       <thead>
         <tr>
@@ -70,6 +72,7 @@ function FilmTable({ films, onDelete, updateFilmFn, setFilms, dirty, setDirty, i
       </tbody>
     </Table>
     <button className='floating-button' onClick={() => { navigate('/add') }}><img src={PlusIcon} className='floating-icon svg-white' alt='Add Film' /></button>
+    <button className='floating-button-left' onClick={() => { logout(); }}><RiLogoutCircleRLine size="25px"/></button>
   </>
 }
 

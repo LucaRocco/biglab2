@@ -45,7 +45,6 @@ function App() {
 
   function deleteFilm(filmId) {
     API.deleteFilm(filmId).then(() => {
-      setFilms(films.filter(film => film.id !== filmId));
       setDirty(true);
     })
   };
@@ -53,7 +52,6 @@ function App() {
   function addFilm(film) {
     return new Promise((resolve, reject) => {
       setWait(true);
-      setFilms(oldFilms => [...oldFilms, { ...film, id: 1 }]);
       API.addFilm(film).then(() => {
         setDirty(true);
         setWait(false);
@@ -63,18 +61,25 @@ function App() {
   };
 
   function doLogin(credentials) {
-    API.logIn(credentials)
+    return API.logIn(credentials)
       .then(user => {
         setUser(user);
         setLoggedIn(true);
       })
   }
 
+  function doLogout() {
+    API.logout()
+      .then(_ => {
+        setUser({});
+        setLoggedIn(false);
+      });
+  }
+
   function updateFilm(film) {
     return new Promise((resolve, reject) => {
       if (!film.message) {
         setWait(true);
-        setFilms(oldFilms => oldFilms.map(newFilm => newFilm.id === film.id ? Object.assign({}, film) : newFilm));
         API.updateFilm(film).then(() => {
           setDirty(true);
           setWait(false);
@@ -88,14 +93,15 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={loggedIn
-          ? <MainPage user={user} searchFilm={query => { setQuery(query) }} films={films} deleteFilm={deleteFilm} updateFilm={updateFilm} query={query} setFilms={setFilms} dirty={dirty} setDirty={setDirty} isLoggedIn={loggedIn}></MainPage>
+          ? <MainPage user={user} searchFilm={query => { setQuery(query) }} films={films} deleteFilm={deleteFilm} updateFilm={updateFilm} query={query} setFilms={setFilms} dirty={dirty} setDirty={setDirty} isLoggedIn={loggedIn} logout={doLogout}></MainPage>
           : <Navigate to='/login' />} />
-        <Route path='/add' element={<FilmForm onSave={addFilm} films={films} wait={wait} />} />
-        <Route path='/edit/:filmId' element={<FilmForm onSave={updateFilm} films={films} wait={wait} />} />
-        <Route path='*' element={<NotFoundPage />} />
+
+        <Route path='/add' element={loggedIn ? <FilmForm onSave={addFilm} films={films} wait={wait} /> : <Navigate to='/login' />} />
+        <Route path='/edit/:filmId' element={loggedIn ? <FilmForm onSave={updateFilm} films={films} wait={wait} /> : <Navigate to='/login' />} />
         <Route path='/login' element={loggedIn
           ? <Navigate to='/' />
           : <Login login={doLogin} />} />
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </Router>)
 }

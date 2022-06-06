@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 import FilmTable from '../../components/film_table/FilmTable';
 
 export default function MainPage(props) {
-  const { searchFilm, films, deleteFilm, updateFilm, query, setFilms, dirty, setDirty, isLoggedIn } = props;
+  const { user, searchFilm, films, deleteFilm, updateFilm, query, setFilms, dirty, setDirty, isLoggedIn, logout } = props;
 
   return (
     <div>
@@ -19,7 +19,7 @@ export default function MainPage(props) {
           <Col md={1}>
           </Col>
           <Col md={8}>
-            <Row> <FilmTable films={films} onDelete={deleteFilm} updateFilmFn={updateFilm} query={query} setFilms={setFilms} dirty={dirty} setDirty={setDirty} isLoggedIn={isLoggedIn}></FilmTable> </Row>
+            <Row> <FilmTable user={user} films={films} onDelete={deleteFilm} updateFilmFn={updateFilm} query={query} setFilms={setFilms} dirty={dirty} setDirty={setDirty} isLoggedIn={isLoggedIn} logout={logout}></FilmTable> </Row>
           </Col>
         </Row>
       </Container>

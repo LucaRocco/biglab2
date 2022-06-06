@@ -26,15 +26,15 @@ function addFilm(film) {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-              },
-            body: JSON.stringify({title: film.title, favorite: film.favorite, rating: film.rating, watchedDate: film.watchedDate ? dayjs(film.watchedDate).format('YYYY-MM-DD') : undefined, user: 1}),
+            },
+            body: JSON.stringify({ title: film.title, favorite: film.favorite, rating: film.rating, watchedDate: film.watchedDate ? dayjs(film.watchedDate).format('YYYY-MM-DD') : undefined }),
         }).then(res => {
             if (res.ok) {
                 resolve(null);
             } else {
                 res.json()
-                .then(message => reject(message))
-                .catch(() => reject({error: "Parse error"}))
+                    .then(message => reject(message))
+                    .catch(() => reject({ error: "Parse error" }))
             }
         }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
     });
@@ -47,10 +47,10 @@ function deleteFilm(filmId) {
             method: 'DELETE',
             credentials: 'include'
         }).then(response => {
-            if(response.ok) {
+            if (response.ok) {
                 resolve(null);
             } else {
-                response.json().then(err => reject(err)).catch(() => reject({message: "unable to parse"}));
+                response.json().then(err => reject(err)).catch(() => reject({ message: "unable to parse" }));
             }
         })
     });
@@ -63,13 +63,13 @@ function updateFilm(film) {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({id: film.id, title: film.title, rating: film.rating, favorite: film.favorite, watchedDate: film.watchedDate ? dayjs(film.watchedDate).format('YYYY-MM-DD') : undefined, user: film.user  })
-        }).then( response => {
+            },
+            body: JSON.stringify({ id: film.id, title: film.title, rating: film.rating, favorite: film.favorite, watchedDate: film.watchedDate ? dayjs(film.watchedDate).format('YYYY-MM-DD') : undefined })
+        }).then(response => {
             if (response.ok) {
                 resolve(null);
             } else {
-                response.json().then(err => reject(err)).catch(() => reject({message: "unable to parse"}))
+                response.json().then(err => reject(err)).catch(() => reject({ message: "unable to parse" }))
             }
         })
     });
@@ -81,30 +81,31 @@ function logIn(credentials) {
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(credentials)
-    })
-    .then(res => {
-        return res.json();
-    })
-    .catch(err => console.log(err));
+        },
+        body: JSON.stringify(credentials)
+    }).then(async res => {
+        if (res.ok)
+            return res.json();
+        throw await res.json();
+    });
 }
 
-async function logOut() {
-    await fetch(`${APIURL}/sessions/current`, { method: 'DELETE', credentials: 'include' });
-  }
-  
-  async function getUserInfo() {
-    const response = await fetch(`${APIURL}/sessions/current`, {credentials: 'include'});
+async function getUserInfo() {
+    const response = await fetch(`${APIURL}/sessions/current`, { credentials: 'include' });
     const userInfo = await response.json();
     if (response.ok) {
-      return userInfo;
+        return userInfo;
     } else {
-      throw userInfo;  // an object with the error coming from the server
+        throw userInfo;  // an object with the error coming from the server
     }
-  }
+}
 
-  
+function logout() {
+    return fetch(`${APIURL}/sessions/current`, {
+        method: 'DELETE',
+        credentials: 'include'
+    });
+}
 
-const API = { getFilms, addFilm, deleteFilm, updateFilm, logIn, getUserInfo };
+const API = { getFilms, addFilm, deleteFilm, updateFilm, logIn, getUserInfo, logout };
 export default API;

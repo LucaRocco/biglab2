@@ -17,6 +17,19 @@ Container {
   border: 0;
 }
 
+.floating-button-left {
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	left:40px;
+	background-color:rgb(253, 14, 14);
+	color: white;
+	border-radius: 50px;
+	text-align: center;
+  border: 0;
+}
+
 .svg-white {
   filter: invert(98%) sepia(100%) saturate(0%) hue-rotate(33deg) brightness(103%) contrast(103%);
 }

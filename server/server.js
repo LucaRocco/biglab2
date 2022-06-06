@@ -89,8 +89,8 @@ app.post('/api/films', isLoggedIn, [
         .isString().withMessage('Title must be a string').trim()
         .notEmpty().withMessage('Title must not be empty'),
     body('watchedDate').optional().isDate({ format: 'YYYY-MM-DD' })
-        .isBefore(dayjs().format('YYYY-MM-DD')).withMessage('No time travel allowed here!'),
-    body('rating').optional().isInt({ min: 0, max: 5 }).withMessage('Must be between 0 and 5'),
+        .isBefore(dayjs().add(1, 'DAY').format('YYYY-MM-DD')).withMessage('No time travel allowed here!'),
+    body('rating').optional().if(val => val != null).isInt({ min: 0, max: 5 }).withMessage('Must be between 0 and 5'),
     body('favorite').isBoolean()
 ], (req, res) => {
     console.log(req.body);
@@ -99,7 +99,7 @@ app.post('/api/films', isLoggedIn, [
         return res.status(422).json({ errors: errors.array() });
     }
 
-    filmDao.addFilm(req.body).then(() => {
+    filmDao.addFilm(req.body, req.user.id).then(() => {
         res.sendStatus(201);
     }).catch(err => {
         res.status(500).json({ error: 'Error during film saving', details: err });
@@ -114,9 +114,10 @@ app.put('/api/films/:filmId', isLoggedIn, [
     body('watchedDate')
         .optional()
         .isDate({ format: 'YYYY-MM-DD' })
-        .isBefore(dayjs().format('YYYY-MM-DD')),
+        .isBefore(dayjs().add(1, 'DAY').format('YYYY-MM-DD')),
     body('rating')
         .optional()
+        .if((val) => val != null)
         .isInt({ min: 0, max: 5 }),
     body('favorite')
         .isBoolean()
@@ -125,7 +126,7 @@ app.put('/api/films/:filmId', isLoggedIn, [
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-    filmDao.updateFilm(req.params.filmId, req.body).then(() => {
+    filmDao.updateFilm(req.params.filmId, req.body, req.user.id).then(() => {
         res.sendStatus(200);
     }).catch(err => {
         res.status(500).json({ error: `DB Error on film ${req.params.filmId}`, details: err });
@@ -150,7 +151,14 @@ app.delete('/api/films/:filmId', isLoggedIn, [
 });
 
 //USER API
-app.post('/api/sessions', function (req, res, next) {
+app.post('/api/sessions', [
+    body('username').isEmail().withMessage('Email not valid'),
+], function (req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        
+        return res.status(422).json({ message: errors.array()[0].msg });
+    }
     passport.authenticate('local', (err, user, info) => {
         if (err) return next(err);
         if (!user) return res.status(401).json(info);
@@ -173,8 +181,6 @@ app.get('/api/sessions/current', (req, res) => {
     }
 }
 );
-
-
 
 app.listen(port, () => {
     console.log(`FilmLibrary app listening on port ${port}`);
